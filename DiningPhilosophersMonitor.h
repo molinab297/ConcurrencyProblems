@@ -5,6 +5,8 @@
 #include <zconf.h>
 #include <random>
 
+class DiningPhilosophersMonitor;
+typedef DiningPhilosophersMonitor* Monitor;
 enum states{THINKING, HUNGRY, EATING};
 
 // Thread Safe Monitor class to ensure mutual exclusion between the philosopher threads.

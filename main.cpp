@@ -2,14 +2,14 @@
 
 // Used for passing multiple parameters to thread function
 struct Parameters{
-    DiningPhilosophersMonitor *dpMonitor;
+    Monitor monitor;
     int id;
 };
 
 // Thread function in which each philosopher thread will think (for 1-3 seconds), eat, and sleep, respectively.
 void *eat(void *p){
     auto params = (Parameters*)p;
-    auto dpMonitor = params->dpMonitor;
+    auto dpMonitor = params->monitor;
     int id = params->id;
 
     printf("Created philosopher: %d\n", id);
@@ -31,15 +31,17 @@ void *eat(void *p){
 // Driver function
 int main() {
 
-    pthread_t philosophers[5];
-    auto dpMonitor  = new DiningPhilosophersMonitor(5);
-    auto parameters = new Parameters[5];
+    const int NUM_PHILOSOPHERS = 5;
+
+    pthread_t philosophers[NUM_PHILOSOPHERS];
+    auto dpMonitor    = new DiningPhilosophersMonitor(NUM_PHILOSOPHERS);
+    auto threadParams = new Parameters[NUM_PHILOSOPHERS];
 
     // Simulate philosophers thinking, eating, and sleeping, respectively.
-    for(int i = 0; i < 5; i++){
-        parameters[i].id = i;
-        parameters[i].dpMonitor = dpMonitor;
-        if(pthread_create(&philosophers[i], nullptr, eat, &parameters[i])){
+    for(int i = 0; i < NUM_PHILOSOPHERS; i++){
+        threadParams[i].id = i;
+        threadParams[i].monitor = dpMonitor;
+        if(pthread_create(&philosophers[i], nullptr, eat, &threadParams[i])){
             fprintf(stderr, "Error creating thread");
             exit(1);
         }
@@ -53,7 +55,7 @@ int main() {
     }
 
     delete dpMonitor;
-    delete [] parameters;
+    delete [] threadParams;
 
     return 0;
 }
