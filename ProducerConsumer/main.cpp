@@ -1,6 +1,7 @@
 #include "ProducerConsumer.h"
 #include <random>
 
+// thread function to continuously produce resources for consumption
 void *produce(void *params){
     auto monitor = (ProducerConsumer*) params;
     std::random_device r;
@@ -11,6 +12,7 @@ void *produce(void *params){
     }
 }
 
+// thread function to continuously consume resources from the buffer
 void *consume(void *params){
     auto monitor = (ProducerConsumer*) params;
     while(true){
